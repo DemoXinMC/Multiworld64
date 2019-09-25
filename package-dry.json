@@ -1,0 +1,13 @@
+{ 
+  "name": "Multiworld", 
+  "version": "0.2.0", 
+  "description": "OoT Randomizer's Multiworld implemented as a ModLoader64 plugin.", 
+  "main": "Multiworld.json", 
+  "author": "DemoXin", 
+  "credits": "", 
+  "license": "MIT", 
+  "core": "ocarinaoftime", 
+  "dry": { 
+    "extends": "./ModLoader64/package-dry.json" 
+  } 
+} 
