@@ -43,8 +43,10 @@ cd ../
 dry install --save ./API/build
 fold_end api
 
-# Dry Command
+# Build ModLoader
+fold_start buildModLoader "Building ModLoader64"
 dry run build --dry-keep-package-json
+fold_end buildModLoader
 
 # Build PayloadConverter
 fold_start payload "Building PayloadConverter"
