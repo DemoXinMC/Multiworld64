@@ -16,8 +16,6 @@ import {
     ServerNetworkHandler,
 } from "modloader64_api/NetworkHandler";
 import { InjectCore } from "modloader64_api/CoreInjection";
-import { LobbyVariable } from "modloader64_api/LobbyVariable";
-import { Packet } from "modloader64_api/ModLoaderDefaultImpls";
 import * as Net from "./network/Imports";
 import { KeyManager, StorageContainer } from "modloader64_api/Storage"
 
@@ -94,7 +92,7 @@ export class Multiworld implements IPlugin
 
         this.cDB.othersItems.push(outgoingItem);
 
-        this.ModLoader.clientSide.sendPacket(outgoingItem.toPacket());
+        this.ModLoader.clientSide.sendPacket(outgoingItem.toPacket(this.ModLoader.clientLobby));
     }
 
     safeToGiveItem() : boolean

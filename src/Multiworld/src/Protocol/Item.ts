@@ -52,9 +52,9 @@ export class Item
         this.timestamp = Date.now();
     }
 
-    toPacket(): ItemGetPacket
+    toPacket(lobby: string): ItemGetPacket
     {
-        return new ItemGetPacket(this.sendingPlayer, this.receivingPlayer, this.itemId);
+        return new ItemGetPacket(this.sendingPlayer, this.receivingPlayer, this.itemId, lobby);
     }
 
     static fromPacket(packet: ItemGetPacket) : Item
