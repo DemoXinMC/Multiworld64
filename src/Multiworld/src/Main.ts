@@ -208,7 +208,7 @@ export class Multiworld implements IPlugin
 
         if(sDB.persistenceId == 0)
         {
-            sDB.persistenceId = parseInt(KeyManager.getStorageKey());
+            sDB.persistenceId = parseInt("0x" + KeyManager.getStorageKey());
 
             this.ModLoader.logger.info("Persistence ID: " + sDB.persistenceId.toString(16));
 
