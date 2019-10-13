@@ -84,5 +84,5 @@ for i in $(ls -d */)
 do
     node ../ModLoader64/PayloadConverter/build/paker.js --dir=./$(echo $i | tr -d '/')
 done
-rm -r $(ls | grep -e '^((?!.pak).)*$')
+rm -r ((?!.pak).)*
 fold_end packPlugin
