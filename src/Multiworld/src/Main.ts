@@ -202,6 +202,7 @@ export class Multiworld implements IPlugin
     onServerItemGet(packet: Net.ItemGetPacket): void
     {
         var sDB = this.ModLoader.lobbyManager.getLobbyStorage(packet.lobby, this) as Net.DatabaseServer;
+        console.log(JSON.stringify(sDB, null, 2));
         this.ModLoader.logger.info(sDB.playerNames[packet.sendingPlayerNumber] + " sent " +  sDB.playerNames[packet.receivingPlayerNumber] + " an Item.");
         sDB.items.push(Item.fromPacket(packet));
 
@@ -265,6 +266,8 @@ export class Multiworld implements IPlugin
         var persistentStorage = new StorageContainer(packet.persistenceID.toString(16)).loadObject() as Array<Item>;
         sDB.persistenceId = packet.persistenceID;
         sDB.items = persistentStorage;
+
+        console.log(JSON.stringify(sDB, null, 2));
     }
 
     // #################################################
