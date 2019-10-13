@@ -85,4 +85,5 @@ do
     node ../ModLoader64/PayloadConverter/build/paker.js --dir=./$(echo $i | tr -d '/')
 done
 rm -R -- */
+rm tsconfig.json
 fold_end packPlugin
