@@ -209,10 +209,13 @@ export class Multiworld implements IPlugin
         {
             sDB.persistenceId = parseInt(KeyManager.getStorageKey());
 
+            this.ModLoader.logger.info("Persistence ID: " + sDB.persistenceId.toString(16));
+
             var persistencePacket = new PersistenceIDPacket(sDB.persistenceId, packet.lobby);
             this.ModLoader.serverSide.sendPacket(persistencePacket);
         }
 
+        this.ModLoader.logger.info("Saving " + sDB.items.length + " items under ID " + sDB.persistenceId.toString(16));
         new StorageContainer(sDB.persistenceId.toString(16)).storeObject(sDB.items);
     }
 
@@ -257,6 +260,8 @@ export class Multiworld implements IPlugin
             return;
         }
 
+        this.ModLoader.logger.info(packet.player.nickname + " sent Persistence ID " + packet.persistenceID.toString(16));
+
         var persistentStorage = new StorageContainer(packet.persistenceID.toString(16)).loadObject() as Array<Item>;
         sDB.persistenceId = packet.persistenceID;
         sDB.items = persistentStorage;
@@ -290,8 +295,8 @@ export class Multiworld implements IPlugin
     {
         if(this.protocol == undefined) { return; }
 
-        this.ModLoader.logger.info("Got " + packet.playerNames.length + " names from the Lobby.");
-        this.ModLoader.logger.info("Names: " + packet.playerNames.join(", "));
+        this.ModLoader.logger.info("Got " + (packet.playerNames.length - 1) + " names from the Lobby.");
+        this.ModLoader.logger.info("Names: " + packet.playerNames.slice(1).join(", "));
 
         for(var i = 1; i < packet.playerNames.length; i++)
         {
@@ -337,6 +342,7 @@ export class Multiworld implements IPlugin
     {
         if(this.protocol == undefined) { return; }
 
+        this.ModLoader.logger.info("Persistence ID: " + packet.persistenceID.toString(16));
         this.protocol.setPersistenceID(packet.persistenceID);
     }
 }
