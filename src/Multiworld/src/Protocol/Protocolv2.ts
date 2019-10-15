@@ -10,6 +10,8 @@ export class Protocolv2 extends Protocolv1
     constructor(contextAddr: number, modloader: IModLoaderAPI)
     {
         super(contextAddr, modloader);
+        this.playerIdAddr = contextAddr + 4;
+        this.playerNameIdAddr = contextAddr + 5;
         this.incomingPlayerAddr  = contextAddr + 6
         this.incomingItemAddr = contextAddr + 8
         this.outgoingKeyAddr = contextAddr + 12
@@ -29,7 +31,7 @@ export class Protocolv2 extends Protocolv1
 
     setIncomingItem(item: Item): void
     {
-        this.emulator.rdramWrite16(this.incomingItemAddr, item.itemId);
         this.emulator.rdramWrite16(this.incomingPlayerAddr, item.sendingPlayer);
+        this.emulator.rdramWrite16(this.incomingItemAddr, item.itemId);
     }
 }

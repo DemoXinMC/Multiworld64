@@ -62,7 +62,7 @@ export class SetNamePacket extends Packet
   
     constructor(playerNumber: number, playerName: string, lobby: string)
     {
-        super("SetNamePacket", "Multiworld", lobby, true);
+        super("SetNamePacket", "Multiworld", lobby, false);
 
         this.playerNumber = playerNumber;
         this.playerName = playerName;

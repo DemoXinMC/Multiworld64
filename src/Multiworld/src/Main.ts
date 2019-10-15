@@ -131,12 +131,11 @@ export class Multiworld implements IPlugin
     {
         if(Date.now() < this.syncCooldown) { return false; }
 
-        this.ModLoader.logger.info("Sending Sync Request...");
+        this.ModLoader.logger.info("Multiworld: Requesting Lobby Data...");
         this.syncCooldown = Date.now() + (10 * 1000);
 
         var syncPacket = new SyncPacket(new Array<Item>(), this.ModLoader.clientLobby);
         this.ModLoader.clientSide.sendPacket(syncPacket);
-        this.ModLoader.logger.info("Sent.");
 
         return true;
     }
@@ -144,7 +143,7 @@ export class Multiworld implements IPlugin
     @EventHandler(OotEvents.ON_SAVE_LOADED)
     onSaveLoaded(event: OotEvents.ON_SAVE_LOADED) : void
     {
-        this.ModLoader.logger.info("Save Loaded.  Beginning Parsing...");
+        this.ModLoader.logger.info("Multiworld: Save Loaded.  Beginning Parsing...");
         var protocolVersion: number = 0;
         var contextAddr: number = 0x400000;
         var rando_context: number = this.ModLoader.emulator.dereferencePointer(0x1C6E90 + 0x15D4);
@@ -152,8 +151,8 @@ export class Multiworld implements IPlugin
         contextAddr = this.ModLoader.emulator.dereferencePointer(rando_context + 0x0000);
         protocolVersion = this.ModLoader.emulator.rdramRead32(contextAddr);
 
-        this.ModLoader.logger.info("Multiworld Protocol v" + protocolVersion);
-        this.ModLoader.logger.info("Multiworld Context: " + contextAddr);
+        this.ModLoader.logger.info("Multiworld:  -- Multiworld Protocol v" + protocolVersion);
+        this.ModLoader.logger.info("Multiworld:  -- Multiworld Context: " + contextAddr);
 
         switch(protocolVersion)
         {
@@ -169,17 +168,16 @@ export class Multiworld implements IPlugin
         }
 
         this.protocol.setPlayerName(this.protocol.getPlayerID(), this.OoT.save.player_name);
-        this.ModLoader.logger.info("Local Player: " + this.protocol.getPlayerName(this.protocol.getPlayerID()) + " (" + this.protocol.getPlayerID() + ")");
+        this.ModLoader.logger.info("Multiworld:  -- Local Player: " + this.protocol.getPlayerName(this.protocol.getPlayerID()) + " (" + this.protocol.getPlayerID() + ")");
 
-        this.ModLoader.logger.info("Sending Name...");
         var namePacket = new SetNamePacket(this.protocol.getPlayerID(), this.OoT.save.player_name, this.ModLoader.clientLobby);
         this.ModLoader.clientSide.sendPacket(namePacket);
-        this.ModLoader.logger.info("Sent.");
 
         var persistenceID: number = this.protocol.getPersistenceID();
 
         if(persistenceID != 0)
         {
+            this.ModLoader.logger.info("Multiworld: Sending Saved Persistence ID");
             var persistenceIDPacket = new PersistenceIDPacket(persistenceID, this.ModLoader.clientLobby);
             this.ModLoader.clientSide.sendPacket(persistenceIDPacket);
         }
@@ -190,7 +188,6 @@ export class Multiworld implements IPlugin
     @EventHandler(EventsServer.ON_LOBBY_CREATE)
     onServer_LobbyCreate(lobby: string) : void
     {
-        this.ModLoader.logger.info("Created Lobby");
         this.ModLoader.lobbyManager.createLobbyStorage(lobby, this, new Net.DatabaseServer())
     }
 
@@ -202,22 +199,21 @@ export class Multiworld implements IPlugin
     onServerItemGet(packet: Net.ItemGetPacket): void
     {
         var sDB = this.ModLoader.lobbyManager.getLobbyStorage(packet.lobby, this) as Net.DatabaseServer;
-        console.log(JSON.stringify(sDB, null, 2));
-        this.ModLoader.logger.info(sDB.playerNames[packet.sendingPlayerNumber] + " sent " +  sDB.playerNames[packet.receivingPlayerNumber] + " an Item.");
+        this.ModLoader.logger.info("Multiworld: " + sDB.playerNames[packet.sendingPlayerNumber] + " sent " +  sDB.playerNames[packet.receivingPlayerNumber] + " an Item: (" + packet.itemNumber + ") " + ItemNames.Randomizer[packet.itemNumber]);
         sDB.items.push(Item.fromPacket(packet));
 
         if(sDB.persistenceId == 0)
         {
             sDB.persistenceId = parseInt("0x" + KeyManager.getStorageKey());
 
-            this.ModLoader.logger.info("Persistence ID: " + sDB.persistenceId.toString(16));
+            this.ModLoader.logger.info("Multiworld:  -- Lobby " + packet.lobby + " is now using Persistence ID: " + sDB.persistenceId.toString(16));
 
             var persistencePacket = new PersistenceIDPacket(sDB.persistenceId, packet.lobby);
             this.ModLoader.serverSide.sendPacket(persistencePacket);
         }
 
-        this.ModLoader.logger.info("Saving " + sDB.items.length + " items under ID " + sDB.persistenceId.toString(16));
-        new StorageContainer(sDB.persistenceId.toString(16)).storeObject(sDB.items);
+        this.ModLoader.logger.info("Multiworld: Saving " + (sDB.playerNames.length - 1) + " players and " + sDB.items.length + " items under Persistence ID " + sDB.persistenceId.toString(16));
+        new StorageContainer(sDB.persistenceId.toString(16)).storeObject(sDB);
     }
 
     @ServerNetworkHandler("SetNamePacket")
@@ -228,7 +224,7 @@ export class Multiworld implements IPlugin
         var namesPacket = new UpdateNamesPacket(sDB.playerNames, packet.lobby);
         this.ModLoader.serverSide.sendPacket(namesPacket);
 
-        this.ModLoader.logger.info("Player " + packet.playerNumber + " is now known as " + packet.playerName);
+        this.ModLoader.logger.info("Multiworld: Player " + packet.playerNumber + " is now known as " + packet.playerName);
     }
 
     @ServerNetworkHandler("SyncPacket")
@@ -248,7 +244,7 @@ export class Multiworld implements IPlugin
         this.ModLoader.serverSide.sendPacketToSpecificPlayer(namesPacket, packet.player);
         this.ModLoader.serverSide.sendPacketToSpecificPlayer(itemsPacket, packet.player);
 
-        this.ModLoader.logger.info("Sent Sync Data to a Player. (" + packet.player.nickname + ")");
+        this.ModLoader.logger.info("Multiworld: Sent Sync Data to (" + packet.player.nickname + ")");
     }
 
     @ServerNetworkHandler("PersistenceIDPacket")
@@ -261,13 +257,10 @@ export class Multiworld implements IPlugin
             return;
         }
 
-        this.ModLoader.logger.info(packet.player.nickname + " sent Persistence ID " + packet.persistenceID.toString(16));
+        this.ModLoader.logger.info("Multiworld:  -- " + packet.player.nickname + " sent Persistence ID " + packet.persistenceID.toString(16));
 
-        var persistentStorage = new StorageContainer(packet.persistenceID.toString(16)).loadObject() as Array<Item>;
-        sDB.persistenceId = packet.persistenceID;
-        sDB.items = persistentStorage;
-
-        console.log(JSON.stringify(sDB, null, 2));
+        var persistentStorage = new StorageContainer(packet.persistenceID.toString(16)).loadObject() as Net.DatabaseServer;
+        this.ModLoader.lobbyManager.createLobbyStorage(packet.lobby, this, persistentStorage);
     }
 
     // #################################################
@@ -290,7 +283,7 @@ export class Multiworld implements IPlugin
             this.cDB.othersItems.push(receivedItem);
         }
 
-        this.ModLoader.logger.info(this.protocol.getPlayerName(receivedItem.sendingPlayer) + " sent " + this.protocol.getPlayerName(receivedItem.receivingPlayer) + " an Item (" + ItemNames.Randomizer[receivedItem.itemId] + " [" + receivedItem.itemId + "])");
+        this.ModLoader.logger.info("Multiworld: " + this.protocol.getPlayerName(receivedItem.sendingPlayer) + " sent " + this.protocol.getPlayerName(receivedItem.receivingPlayer) + " an Item: (" + receivedItem.itemId + ") " + ItemNames.Randomizer[receivedItem.itemId]);
     }
 
     @NetworkHandler("UpdateNamesPacket")
@@ -298,12 +291,12 @@ export class Multiworld implements IPlugin
     {
         if(this.protocol == undefined) { return; }
 
-        this.ModLoader.logger.info("Got " + (packet.playerNames.length - 1) + " names from the Lobby.");
-        this.ModLoader.logger.info("Names: " + packet.playerNames.slice(1).join(", "));
+        this.ModLoader.logger.info("Multiworld: Received " + (packet.playerNames.length - 1) + " names from the Lobby.");
 
         for(var i = 1; i < packet.playerNames.length; i++)
         {
             this.protocol.setPlayerName(i, packet.playerNames[i]);
+            this.ModLoader.logger.info("Multiworld:  -- Player " + i + " is known as " + this.protocol.getPlayerName(i));
         }
     }
 
@@ -312,17 +305,18 @@ export class Multiworld implements IPlugin
     {
         if(this.protocol == undefined) { return; }
 
+        // Should never fire after 0.2.1
+
         this.protocol.setPlayerName(packet.playerNumber, packet.playerName);
-        this.ModLoader.logger.info("Player " + packet.playerNumber + " is now known as " + packet.playerName);
+        this.ModLoader.logger.info("MUltiworld:  -- Player " + packet.playerNumber + " is now known as " + packet.playerName);
     }
 
     @NetworkHandler("SyncPacket")
     onClientSync(packet: Net.SyncPacket): void
     {
-        this.ModLoader.logger.info("Received Item Sync...");
         if(this.protocol == undefined) { return; }
 
-        this.ModLoader.logger.info("Received Item Sync. Total Items: " + packet.items.length);
+        this.ModLoader.logger.info("Multiworld: Received Item Sync. Total Items: " + packet.items.length);
 
         this.cDB.myItems = new Array<Item>();
         this.cDB.othersItems = new Array<Item>();
@@ -336,8 +330,8 @@ export class Multiworld implements IPlugin
                 this.cDB.othersItems.push(parsedItem);
         }
 
-        this.ModLoader.logger.info("My Item Count: " + this.cDB.myItems.length);
-        this.ModLoader.logger.info("Others' Item Count: " + this.cDB.othersItems.length);
+        this.ModLoader.logger.info("Multiworld:  -- My Item Count: " + this.cDB.myItems.length);
+        this.ModLoader.logger.info("Multiworld:  -- Others' Item Count: " + this.cDB.othersItems.length);
     }
 
     @NetworkHandler("PersistenceIDPacket")
@@ -345,7 +339,7 @@ export class Multiworld implements IPlugin
     {
         if(this.protocol == undefined) { return; }
 
-        this.ModLoader.logger.info("Persistence ID: " + packet.persistenceID.toString(16));
+        this.ModLoader.logger.info("Multiworld:  -- Persistence ID: " + packet.persistenceID.toString(16));
         this.protocol.setPersistenceID(packet.persistenceID);
     }
 }
