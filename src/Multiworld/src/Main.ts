@@ -295,20 +295,9 @@ export class Multiworld implements IPlugin
 
         for(var i = 1; i < packet.playerNames.length; i++)
         {
-            this.ModLoader.logger.info("Multiworld:  -- Player " + i + " is known as " + this.protocol.getPlayerName(i));
-            this.protocol.setPlayerName(i, packet.playerNames[i]);         
+            this.protocol.setPlayerName(i, packet.playerNames[i]);
+            this.ModLoader.logger.info("Multiworld:  -- Player " + i + " is known as " + this.protocol.getPlayerName(i));         
         }
-    }
-
-    @NetworkHandler("SetNamePacket")
-    onClientSetName(packet: Net.SetNamePacket): void
-    {
-        if(this.protocol == undefined) { return; }
-
-        // Should never fire after 0.2.1
-
-        this.protocol.setPlayerName(packet.playerNumber, packet.playerName);
-        this.ModLoader.logger.info("Multiworld:  -- Player " + packet.playerNumber + " is now known as " + packet.playerName);
     }
 
     @NetworkHandler("SyncPacket")
@@ -338,6 +327,7 @@ export class Multiworld implements IPlugin
     onClientPersistenceID(packet: Net.PersistenceIDPacket)
     {
         if(this.protocol == undefined) { return; }
+        if(packet.persistenceID == undefined) { return; }
 
         this.ModLoader.logger.info("Multiworld:  -- Persistence ID: " + packet.persistenceID.toString(16));
         this.protocol.setPersistenceID(packet.persistenceID);
