@@ -177,7 +177,7 @@ export class Multiworld implements IPlugin
 
         if(persistenceID != 0)
         {
-            this.ModLoader.logger.info("Multiworld: Sending Saved Persistence ID");
+            this.ModLoader.logger.info("Multiworld:  -- Persistence ID: " + persistenceID);
             var persistenceIDPacket = new PersistenceIDPacket(persistenceID, this.ModLoader.clientLobby);
             this.ModLoader.clientSide.sendPacket(persistenceIDPacket);
         }
@@ -295,8 +295,8 @@ export class Multiworld implements IPlugin
 
         for(var i = 1; i < packet.playerNames.length; i++)
         {
-            this.protocol.setPlayerName(i, packet.playerNames[i]);
             this.ModLoader.logger.info("Multiworld:  -- Player " + i + " is known as " + this.protocol.getPlayerName(i));
+            this.protocol.setPlayerName(i, packet.playerNames[i]);         
         }
     }
 
@@ -308,7 +308,7 @@ export class Multiworld implements IPlugin
         // Should never fire after 0.2.1
 
         this.protocol.setPlayerName(packet.playerNumber, packet.playerName);
-        this.ModLoader.logger.info("MUltiworld:  -- Player " + packet.playerNumber + " is now known as " + packet.playerName);
+        this.ModLoader.logger.info("Multiworld:  -- Player " + packet.playerNumber + " is now known as " + packet.playerName);
     }
 
     @NetworkHandler("SyncPacket")
