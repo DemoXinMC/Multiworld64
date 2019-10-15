@@ -260,7 +260,9 @@ export class Multiworld implements IPlugin
         this.ModLoader.logger.info("Multiworld:  -- " + packet.player.nickname + " sent Persistence ID " + packet.persistenceID.toString(16));
 
         var persistentStorage = new StorageContainer(packet.persistenceID.toString(16)).loadObject() as Net.DatabaseServer;
-        this.ModLoader.lobbyManager.createLobbyStorage(packet.lobby, this, persistentStorage);
+        sDB.playerNames = persistentStorage.playerNames;
+        sDB.items = persistentStorage.items;
+        sDB.persistenceId = packet.persistenceID;
     }
 
     // #################################################
@@ -327,7 +329,6 @@ export class Multiworld implements IPlugin
     onClientPersistenceID(packet: Net.PersistenceIDPacket)
     {
         if(this.protocol == undefined) { return; }
-        if(packet.persistenceID == undefined) { return; }
 
         this.ModLoader.logger.info("Multiworld:  -- Persistence ID: " + packet.persistenceID.toString(16));
         this.protocol.setPersistenceID(packet.persistenceID);
