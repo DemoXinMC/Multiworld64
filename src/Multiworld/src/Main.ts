@@ -177,7 +177,7 @@ export class Multiworld implements IPlugin
 
         if(persistenceID != 0)
         {
-            this.ModLoader.logger.info("Multiworld:  -- Persistence ID: " + persistenceID);
+            this.ModLoader.logger.info("Multiworld:  -- Persistence ID: " + persistenceID.toString(16));
             var persistenceIDPacket = new PersistenceIDPacket(persistenceID, this.ModLoader.clientLobby);
             this.ModLoader.clientSide.sendPacket(persistenceIDPacket);
         }
