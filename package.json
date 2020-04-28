@@ -1,0 +1,20 @@
+{
+  "name": "Multiworld64",
+  "version": "1.0.0",
+  "description": "This plugin is a reimplementation of Multiworld for Ocarina of Time Randomizer's Multiworld feature.",
+  "main": "Multiworld.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DemoXinMC/Multiworld64.git"
+  },
+  "keywords": [],
+  "author": "DemoXin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DemoXinMC/Multiworld64/issues"
+  },
+  "homepage": "https://github.com/DemoXinMC/Multiworld64#readme"
+}
