@@ -1,0 +1,10 @@
+{
+  "name": "Multiworld64",
+  "version": "1.0.0",
+  "description": "This plugin is a reimplementation of Multiworld for Ocarina of Time Randomizer's Multiworld feature.",
+  "main": "Multiworld.js",
+  "author": "DemoXin",
+  "credits": "TheLensta",
+  "license": "",
+  "core": "OcarinaofTime"
+}

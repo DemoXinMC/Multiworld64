@@ -1,4 +1,11 @@
-API/
-node_modules/
 build/
+cores/
+dependencies/
 dist/
+external_cores/
+libs/
+node_modules/
+roms/
+modloader64-config.json
+package-lock.json
+modloader64-p2-config.json
