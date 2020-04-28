@@ -61,7 +61,7 @@ export interface IProtocol
      * @returns {Item} An Item representing the Outbound Item
      * @memberof IProtocol
      */
-    getOutgoingItem(clear: boolean) : Item;
+    getOutgoingItem() : Item;
     /**
      * Set the Outbound Item in RAM.  You probably shouldn't do this!
      *
