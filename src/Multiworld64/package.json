@@ -6,5 +6,9 @@
   "author": "DemoXin",
   "credits": "TheLensta",
   "license": "",
-  "core": "OcarinaofTime"
+  "core": "OcarinaofTime",
+  "updateUrl": "https://raw.githubusercontent.com/DemoXinMC/Multiworld64/master/update.json",
+  "modloader64_deps": {
+    "BanjoTooie": "https://github.com/DemoXinMC/Multiworld64"
+  }
 }
