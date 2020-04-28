@@ -22,16 +22,19 @@ export class Protocolv2 extends Protocolv1
 
     getProtocolVersion(): number { return 2; }
 
-    getIncomingItem(): Item
+    getIncomingItem(): Item //Only used in boolean safety check, returning itemId does suffice
     {
         var itemId: number = this.emulator.rdramRead16(this.incomingItemAddr);
+        /*
         var sendingPlayer: number = this.emulator.rdramRead16(this.incomingPlayerAddr);
         return new Item(sendingPlayer, this.getPlayerID(), itemId);
+        */
+        return itemId;
     }
 
     setIncomingItem(item: Item): void
     {
-        this.emulator.rdramWrite16(this.incomingPlayerAddr, item.sendingPlayer);
+        this.emulator.rdramWrite16(this.incomingPlayerAddr, item.receivingPlayer);
         this.emulator.rdramWrite16(this.incomingItemAddr, item.itemId);
     }
 }

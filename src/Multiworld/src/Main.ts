@@ -88,7 +88,7 @@ export class Multiworld implements IPlugin
         if(this.protocol == undefined) { return; }
         if(!this.protocol.hasOutgoingItem()) { return; }
 
-        var outgoingItem: Item = this.protocol.getOutgoingItem(true);
+        var outgoingItem: Item = this.protocol.getOutgoingItem();
 
         this.cDB.othersItems.push(outgoingItem);
 

@@ -104,19 +104,16 @@ export class Protocolv0 implements IProtocol
     {
         return this.emulator.rdramRead32(this.outgoingKeyAddr) != 0;
     }
-    getOutgoingItem(clear: boolean): Item
+    getOutgoingItem(): Item
     {
         var itemId: number = this.emulator.rdramRead16(this.outgoingItemAddr);
         var receivingPlayer: number = this.emulator.rdramRead16(this.outgoingPlayerAddr);
         var myPlayer: number = this.getPlayerID();
         var outgoingItem: Item = new Item(myPlayer, receivingPlayer, itemId);
 
-        if(clear)
-        {
-            this.emulator.rdramWrite32(this.outgoingKeyAddr, 0);
-            this.emulator.rdramWrite16(this.outgoingItemAddr, 0);
-            this.emulator.rdramWrite16(this.outgoingPlayerAddr, 0);
-        }
+        this.emulator.rdramWrite32(this.outgoingKeyAddr, 0);
+        this.emulator.rdramWrite16(this.outgoingItemAddr, 0);
+        this.emulator.rdramWrite16(this.outgoingPlayerAddr, 0);
 
         return outgoingItem;
     }
@@ -134,7 +131,7 @@ export class Protocolv0 implements IProtocol
     getIncomingItem(): Item
     {
         var itemId: number = this.emulator.rdramRead16(this.incomingItemAddr);
-        return new Item(this.getPlayerID(), this.getPlayerID(), itemId);
+        return new Item(this.getPlayerID(), this.getPlayerID(), itemId); //I'm not sure why there's 2 getPlayerID()'s here
     }
     setIncomingItem(item: Item): void
     {
