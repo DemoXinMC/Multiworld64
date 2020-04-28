@@ -1,14 +1,11 @@
 {
   "name": "Multiworld64",
-  "version": "1.0.0",
-  "description": "This plugin is a reimplementation of Multiworld for Ocarina of Time Randomizer's Multiworld feature.",
+  "version": "1.0.0-rc",
+  "description": "Ocarina of Time Randomizer Multiworld for Modloader64",
   "main": "Multiworld.js",
   "author": "DemoXin",
   "credits": "TheLensta",
-  "license": "",
+  "license": "MIT",
   "core": "OcarinaofTime",
   "updateUrl": "https://raw.githubusercontent.com/DemoXinMC/Multiworld64/master/update.json",
-  "modloader64_deps": {
-    "BanjoTooie": "https://github.com/DemoXinMC/Multiworld64"
-  }
 }

@@ -30,6 +30,7 @@ import { Protocolv2 } from "./Protocol/Protocolv2";
 import { SetNamePacket, SyncPacket, ItemGetPacket, UpdateNamesPacket, PersistenceIDPacket } from "./Network/Imports";
 import { Item } from "./Protocol/Item";
 import { ItemNames } from "./Helpers/RandomizerItems";
+import { DiscordStatus } from "modloader64_api/Discord";
 
 export class Multiworld implements IPlugin
 {
@@ -44,6 +45,7 @@ export class Multiworld implements IPlugin
 
     private protocol?: IProtocol = undefined;
     private syncCooldown: number = Date.now()-1;
+    private discordCooldown: number = Date.now()-1;
     
     constructor() {}
     preinit(): void {}
@@ -60,6 +62,13 @@ export class Multiworld implements IPlugin
 
         this.receiveItem();
         this.postItem();
+
+        if(Date.now() < this.discordCooldown)
+            return;
+
+        this.discordCooldown = Date.now() + (5 * 1000);
+        var discord: DiscordStatus = new DiscordStatus("Playing Ocarina of Time: Multiworld", "World " + this.protocol.getPlayerID() + " of " + (this.cDB.playerNames.length - 1));
+        this.ModLoader.gui.setDiscordStatus(discord);
     }
 
     receiveItem() : void
