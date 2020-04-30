@@ -1,6 +1,6 @@
 {
   "name": "Multiworld64",
-  "version": "1.0.0-rc",
+  "version": "1.0.0",
   "description": "Ocarina of Time Randomizer Multiworld for Modloader64",
   "main": "Multiworld.js",
   "author": "DemoXin",
