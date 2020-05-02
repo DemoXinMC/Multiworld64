@@ -7,7 +7,7 @@ import {
     EventsServer,
     bus,
 } from "modloader64_api/EventHandler";
-import { IModLoaderAPI, IPlugin } from "modloader64_api/IModLoaderAPI";
+import { IModLoaderAPI, IPlugin, IPluginServerConfig } from "modloader64_api/IModLoaderAPI";
 import {
     ILobbyStorage,
     INetworkPlayer,
@@ -27,12 +27,12 @@ import { IProtocol } from "./Protocol/IProtocol";
 import { Protocolv0 } from "./Protocol/Protocolv0";
 import { Protocolv1 } from "./Protocol/Protocolv1";
 import { Protocolv2 } from "./Protocol/Protocolv2";
-import { SetNamePacket, SyncPacket, ItemGetPacket, UpdateNamesPacket, PersistenceIDPacket } from "./network/Imports";
+import { SetNamePacket, SyncPacket, ItemGetPacket, UpdateNamesPacket, PersistenceIDPacket } from "./Network/Imports";
 import { Item } from "./Protocol/Item";
 import { ItemNames } from "./Helpers/RandomizerItems";
 import { DiscordStatus } from "modloader64_api/Discord";
 
-export class Multiworld implements IPlugin
+export class Multiworld implements IPlugin, IPluginServerConfig
 {
     ModLoader = {} as IModLoaderAPI;
     pluginName = "Multiworld64";
@@ -46,6 +46,11 @@ export class Multiworld implements IPlugin
     private protocol?: IProtocol = undefined;
     private syncCooldown: number = Date.now()-1;
     private discordCooldown: number = Date.now()-1;
+
+    getServerURL(): string
+    {
+        return "192.99.70.23:8000";
+    }
     
     constructor() {}
     preinit(): void {}

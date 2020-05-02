@@ -31,7 +31,7 @@ export class Protocolv2 extends Protocolv1
 
     setIncomingItem(item: Item): void
     {
-        this.emulator.rdramWrite16(this.incomingPlayerAddr, item.sendingPlayer);
+        this.emulator.rdramWrite16(this.incomingPlayerAddr, item.receivingPlayer);
         this.emulator.rdramWrite16(this.incomingItemAddr, item.itemId);
     }
 }
